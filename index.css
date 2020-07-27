@@ -1,0 +1,187 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+.hidden {
+  display: none;
+}
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar {
+  width: 0px;
+  /*滚动条宽度*/
+  height: 16px;
+  /*滚动条高度*/
+}
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  /*滚动条的背景区域的圆角*/
+  background-color: rgba(235, 235, 235, 0);
+  /*滚动条的背景颜色*/
+}
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  /*滚动条的圆角*/
+  background-color: #e9abab;
+  /*滚动条的背景颜色*/
+}
+div#app-music {
+  width: 100vw;
+  height: 100vh;
+  background-image: linear-gradient(135deg, #e9cfa7, #c98888);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  --themeColor: #c98888;
+}
+div#app-music div.app-video-box div.app-mask {
+  position: fixed;
+  border-radius: 20px;
+  width: 1200px;
+  height: 800px;
+}
+div#app-music div.app-video-box .app-video-close {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 0px;
+  left: 1250px;
+  font-size: 40px;
+  cursor: pointer;
+}
+div#app-music div.app-video-box video {
+  position: absolute;
+  width: 1280px;
+  height: 720px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  box-shadow: 0px 8px 20px rgba(1, 1, 1, 0.5), 0px 8px 600px rgba(1, 1, 1, 0.8);
+  outline: none;
+}
+div#app-music div#app-music-box {
+  width: 1200px;
+  height: 800px;
+  border-radius: 20px;
+  position: relative;
+}
+div#app-music div#app-music-box div.search-bar-input {
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+div#app-music div#app-music-box div.search-bar-input input {
+  width: 300px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid #444444;
+  box-shadow: 0px 4px 20px rgba(1, 1, 1, 0.2);
+  outline: none;
+  text-indent: 1em;
+  background: url(imgs/zoom.png) 275px center no-repeat #fff;
+}
+div#app-music div#app-music-box div.app-music-content-player {
+  width: 300px;
+  height: 160px;
+  position: absolute;
+  top: 510px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 8px;
+}
+div#app-music div#app-music-box div.app-music-content-player .app-music-content-player-cover {
+  width: 200px;
+  height: 40px;
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  border-radius: 50%;
+  background-size: 100% 100%;
+  transform: translateX(-50%);
+  box-shadow: 2px 4px 10px rgba(1, 1, 1, 0.3);
+  transition: height 0.2s;
+}
+div#app-music div#app-music-box div.app-music-content-player .app-music-content-player-cover.length {
+  height: 200px;
+}
+div#app-music div#app-music-box div.app-music-content-player div.app-music-content-player-audio {
+  position: absolute;
+  bottom: 0;
+}
+div#app-music div#app-music-box div.app-music-content-player div.app-music-content-player-audio audio.audio-player {
+  outline: none;
+  height: 40px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 20px rgba(1, 1, 1, 0.2);
+}
+div#app-music div#app-music-box div.app-music-content-list {
+  width: 300px;
+  height: 525px;
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 20px rgba(1, 1, 1, 0.2);
+  overflow-x: hidden;
+  transition: height 0.2s;
+}
+div#app-music div#app-music-box div.app-music-content-list div.app-music-songs-list {
+  width: 100%;
+  height: 100%;
+  font-size: 10px;
+  color: #333;
+  line-height: 25px;
+}
+div#app-music div#app-music-box div.app-music-content-list div.app-music-songs-list div.app-music-songs-list-item {
+  width: 100%;
+  height: 25px;
+}
+div#app-music div#app-music-box div.app-music-content-list div.app-music-songs-list div.app-music-songs-list-item div.player-audio {
+  width: 30px;
+  height: 25px;
+  box-sizing: border-box;
+  float: left;
+  background: url(imgs/table.png) -17px -20px no-repeat;
+  position: relative;
+  cursor: pointer;
+}
+div#app-music div#app-music-box div.app-music-content-list div.app-music-songs-list div.app-music-songs-list-item div.player-name {
+  width: 240px;
+  height: 25px;
+  box-sizing: border-box;
+  float: left;
+  text-indent: 0.5em;
+}
+div#app-music div#app-music-box div.app-music-content-list div.app-music-songs-list div.app-music-songs-list-item div.player-mv {
+  width: 30px;
+  height: 20px;
+  margin-top: 2px;
+  box-sizing: border-box;
+  float: right;
+  background: url(imgs/table.png) left -45px;
+  cursor: pointer;
+}
+div#app-music div#app-music-box div.app-music-content-list div.app-music-songs-list-item:nth-child(odd) {
+  background: #fff3f3;
+}
+div#app-music div#app-music-box div.app-music-content-list.length {
+  height: 350px;
+}
+div#app-music div#app-music-box div.app-music-content-comment {
+  width: 1200px;
+  height: 800px;
+  position: fixed;
+  border-radius: 20px;
+  border: 1px solid #000;
+  z-index: -1;
+}

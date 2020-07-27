@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>没有名字的播放器</title>
+    <link rel="stylesheet" href="index.css">
+    <style>
+        [v-cloak]{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app-music" v-cloak>
+        <div id="app-music-box">
+            <!-- 搜索框开始 -->
+            <div class="search-bar">
+                <div class="search-bar-input">
+                    <input type="text" name="" id="" v-model="keywords" @keyup.13="search">
+                </div>
+            </div>
+            <!-- 搜索框结束 -->
+            <!-- 内容开始 -->
+            <div id="app-music-content">
+                <div class="app-music-content-comment">comment</div>
+                <div class="app-music-content-player">
+                    <img :src="coverURL==''?'./imgs/cover.jpg':coverURL" :class="['app-music-content-player-cover',{length:isAudioPlaying}]"></img>
+                    <div class="app-music-content-player-audio">
+                        <audio ref="audio" class="audio-player" :src="musicURL" @pause="audioPause" @play="audioPlay" controls autoplay loop ></audio>
+                    </div>
+                </div>
+                <div :class="['app-music-content-list',{length:isAudioPlaying}]">
+                    <div class="app-music-songs-list">
+                        <div v-for="song,index in songs" class="app-music-songs-list-item">
+                            <div class="player-audio" @click="playAudio(song.id)"></div>
+                            <div class="player-name">{{ song.name }}</div>
+                            <div :class="['player-mv',{hidden:song.mvid==0}]" @click="playMV(song.mvid)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 内容结束 -->
+            <div :class="['app-video-box',{hidden:!isVideoPlaying}]">
+                <div class="app-mask"></div>
+                <div class="app-video-close" @click="closeMV">×</div>
+                <video ref="video" :src="videoURL" controls autoplay loop ></video>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./lib/vue.js"></script>
+<script src="./lib/axios.js"></script>
+<script src="./js/common.js"></script>
+<script>
+    var app = new Vue({
+        el: "#app-music",
+        data: {
+            songs: [],
+            keywords: "热门",
+            musicURL: "",
+            isVideoPlaying: false,
+            isAudioPlaying: false,
+            videoURL: "",
+            coverURL: ""
+        },
+        mounted() {
+            this.search()
+        },
+        methods: {
+            // 搜索音乐
+            search: function(){
+                Axios.get("/search",{
+                params:{
+                    keywords:this.keywords
+                }
+            }).then((res)=>{
+                this.songs = res.result.songs
+            })
+            },
+            // 播放音乐
+            playAudio: function(id) {
+                    Axios.get("/song/url",{
+                    params:{
+                        id: id,
+                    }
+                }).then((res)=>{
+                    this.musicURL = res.data[0].url
+                    this.isAudioPlaying = true
+                })
+                // 获取歌曲详情
+                Axios.get('/song/detail',{
+                    params:{
+                        ids:id
+                    }
+                }).then((res)=>{
+                    this.coverURL = res.songs[0].al.picUrl
+                })
+            },
+            // 继续播放音乐
+            audioPlay: function() {
+                this.isAudioPlaying = true
+            },
+            // 暂停播放音乐
+            audioPause: function() {
+                this.isAudioPlaying = false
+            },
+            // 播放mv
+            playMV: function(mvid){
+                Axios.get("/mv/url",{
+                params:{
+                        id:mvid
+                    }
+                }).then((res)=>{
+                    this.videoURL = res.data.url
+                })
+                this.isAudioPlaying = false
+                this.$refs.audio.pause()
+                this.isVideoPlaying = true
+            },
+            // 关闭视频播放器
+            closeMV: function() {
+                this.$refs.video.pause()
+                this.isVideoPlaying = false
+            }
+        }
+    })
+</script>
+</html>
