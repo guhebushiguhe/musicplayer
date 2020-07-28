@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>没有名字的播放器</title>
+    <title>网抑云音乐</title>
+    <link rel="stylesheet" href="./animate.css">
     <link rel="stylesheet" href="index.css">
     <style>
         [v-cloak]{
@@ -23,9 +24,23 @@
             <!-- 搜索框结束 -->
             <!-- 内容开始 -->
             <div id="app-music-content">
-                <div class="app-music-content-comment">comment</div>
+                <div class="app-music-content-comment" ref="commentWrap" @dblclick.stop="showComment">
+                    <div class="app-music-content-comment-box  flow" v-for="comment,index in hotComments" v-show="comment.show" :style="comment.position"  @dblclick.stop="closeComment(index)" v-drag.self>
+                        <div class="commentWrap">
+                            <div class="imageWrapper">
+                                <img :src="comment.user.avatarUrl" alt="">
+                            </div>
+                            <span class="nick-name">
+                                {{ comment.user.nickname }}
+                            </span>
+                            <span class="comment-content">
+                                {{ comment.content}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
                 <div class="app-music-content-player">
-                    <img :src="coverURL==''?'./imgs/cover.jpg':coverURL" :class="['app-music-content-player-cover',{length:isAudioPlaying}]"></img>
+                    <img :src="coverURL==''?'./imgs/cover.jpg':coverURL" :class="['app-music-content-player-cover',{length:isAudioPlaying},{rotate:isAudioPlaying}]"></img>
                     <div class="app-music-content-player-audio">
                         <audio ref="audio" class="audio-player" :src="musicURL" @pause="audioPause" @play="audioPlay" controls autoplay loop ></audio>
                     </div>
@@ -33,9 +48,9 @@
                 <div :class="['app-music-content-list',{length:isAudioPlaying}]">
                     <div class="app-music-songs-list">
                         <div v-for="song,index in songs" class="app-music-songs-list-item">
-                            <div class="player-audio" @click="playAudio(song.id)"></div>
-                            <div class="player-name">{{ song.name }}</div>
-                            <div :class="['player-mv',{hidden:song.mvid==0}]" @click="playMV(song.mvid)"></div>
+                            <div class="player-audio" @click.self="playAudio(song.id)"></div>
+                            <div class="player-name">{{ song.name }} - {{ song.artists[0].name }}</div>
+                            <div :class="['player-mv',{hidden:song.mvid==0}]" @click.self="playMV(song.mvid)"></div>
                         </div>
                     </div>
                 </div>
@@ -46,6 +61,9 @@
                 <div class="app-video-close" @click="closeMV">×</div>
                 <video ref="video" :src="videoURL" controls autoplay loop ></video>
             </div>
+            <div class="background-fx">
+                <iframe src="./flow_dot.html" frameborder="0" width="100%" height="100%"></iframe>
+            </div>
         </div>
     </div>
 </body>
@@ -53,6 +71,15 @@
 <script src="./lib/axios.js"></script>
 <script src="./js/common.js"></script>
 <script>
+    // 阻止浏览器默认事件
+    function stopDefault(e){
+        if(e && e.preventDefault){
+            e.preventDefault()
+        }else{
+            window.event.returnValue = false
+            return false
+        }
+    }
     var app = new Vue({
         el: "#app-music",
         data: {
@@ -62,7 +89,11 @@
             isVideoPlaying: false,
             isAudioPlaying: false,
             videoURL: "",
-            coverURL: ""
+            coverURL: "",
+            artistName: "",
+            hotComments: [],
+            commentsLength: 0,
+            commentCounter: -1
         },
         mounted() {
             this.search()
@@ -72,11 +103,12 @@
             search: function(){
                 Axios.get("/search",{
                 params:{
-                    keywords:this.keywords
-                }
-            }).then((res)=>{
-                this.songs = res.result.songs
-            })
+                        keywords:this.keywords
+                    }
+                }).then((res)=>{
+                    this.songs = res.result.songs
+                    // console.log(res.result.songs[1])
+                })
             },
             // 播放音乐
             playAudio: function(id) {
@@ -94,7 +126,26 @@
                         ids:id
                     }
                 }).then((res)=>{
+                    this.artistName = res.songs[0].ar[0].name
                     this.coverURL = res.songs[0].al.picUrl
+                })
+                // 获取歌曲评论
+                Axios.get("/comment/hot?type=0", {
+                    params: {
+                        id: id
+                    }
+                }).then((res) => {
+                    console.log(res.hotComments[0].user.nickname)
+                    console.log(res.hotComments[0].content)
+                    for (i=0;i<res.hotComments.length;i++){
+                        res.hotComments[i].show=false
+                        res.hotComments[i].position={
+                            top: "0px",
+                            left: "0px"
+                        }
+                    }
+                    this.hotComments = res.hotComments
+                    this.commentsLength = res.hotComments.length
                 })
             },
             // 继续播放音乐
@@ -122,6 +173,55 @@
             closeMV: function() {
                 this.$refs.video.pause()
                 this.isVideoPlaying = false
+            },
+            // 添加评论显示
+            showComment: function(e) {
+                if(this.coverURL){
+                    if(this.commentCounter<this.commentsLength){
+                        this.commentCounter ++
+                    }else if(this.commentCounter>=this.commentsLength){
+                        this.commentCounter = 0
+                    }
+                    let el = this.$refs.commentWrap
+                    let disX = e.clientX - el.offsetLeft;
+                    let disY = e.clientY - el.offsetTop;
+                    this.hotComments[this.commentCounter].position.top = disY -20 + 'px'
+                    this.hotComments[this.commentCounter].position.left = disX - 20 +'px'
+                    this.$nextTick(function(){
+                        this.hotComments[this.commentCounter].show = true
+                    })
+                }else {
+                    return
+                }
+            },
+            // 关闭单条评论
+            closeComment: function(i) {
+                this.hotComments[i].show = false
+            }
+        },
+        directives: {
+            // 鼠标拖拽事件
+            drag: function(el) {
+                let dragBox = el; //获取当前元素
+                dragBox.onmousedown = e => {
+                    //算出鼠标相对元素的位置
+                    let disX = e.clientX - dragBox.offsetLeft;
+                    let disY = e.clientY - dragBox.offsetTop;
+                    document.onmousemove = e => {
+                        //用鼠标的位置减去鼠标相对元素的位置，得到元素的位置
+                        let left = e.clientX - disX;
+                        let top = e.clientY - disY;
+                        //移动当前元素
+                        dragBox.style.left = left + "px";
+                        dragBox.style.top = top + "px";
+                    };
+                    document.onmouseup = e => {
+                          //鼠标弹起来的时候不再移动
+                          document.onmousemove = null;
+                         //预防鼠标弹起来后还会循环（即预防鼠标放上去的时候还会移动）  
+                        document.onmouseup = null;
+                    };
+                };
             }
         }
     })

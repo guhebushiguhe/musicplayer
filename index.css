@@ -6,9 +6,38 @@ html,
 body {
   width: 100%;
   height: 100%;
+  user-select: none;
 }
 .hidden {
   display: none;
+}
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes flotar {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+.flow {
+  animation: flotar 4s ease-in-out infinite;
+}
+.rotate {
+  animation: rotate 10s linear infinite;
 }
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar {
@@ -42,17 +71,20 @@ div#app-music {
 }
 div#app-music div.app-video-box div.app-mask {
   position: fixed;
-  border-radius: 20px;
-  width: 1200px;
-  height: 800px;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.623);
 }
 div#app-music div.app-video-box .app-video-close {
   position: absolute;
   width: 40px;
   height: 40px;
-  top: 0px;
-  left: 1250px;
+  top: 100px;
+  left: 1560px;
   font-size: 40px;
+  color: #fff;
+  z-index: 10;
   cursor: pointer;
 }
 div#app-music div.app-video-box video {
@@ -67,8 +99,8 @@ div#app-music div.app-video-box video {
   outline: none;
 }
 div#app-music div#app-music-box {
-  width: 1200px;
-  height: 800px;
+  width: 100%;
+  height: 100%;
   border-radius: 20px;
   position: relative;
 }
@@ -77,12 +109,13 @@ div#app-music div#app-music-box div.search-bar-input {
   top: 50px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 1;
 }
 div#app-music div#app-music-box div.search-bar-input input {
   width: 300px;
   height: 30px;
   border-radius: 8px;
-  border: 1px solid #444444;
+  border: 1px solid #da6d6d;
   box-shadow: 0px 4px 20px rgba(1, 1, 1, 0.2);
   outline: none;
   text-indent: 1em;
@@ -102,11 +135,11 @@ div#app-music div#app-music-box div.app-music-content-player .app-music-content-
   height: 40px;
   position: absolute;
   bottom: 4px;
-  left: 50%;
+  left: 50px;
   border-radius: 50%;
   background-size: 100% 100%;
-  transform: translateX(-50%);
   box-shadow: 2px 4px 10px rgba(1, 1, 1, 0.3);
+  transform-origin: center center;
   transition: height 0.2s;
 }
 div#app-music div#app-music-box div.app-music-content-player .app-music-content-player-cover.length {
@@ -178,10 +211,54 @@ div#app-music div#app-music-box div.app-music-content-list.length {
   height: 350px;
 }
 div#app-music div#app-music-box div.app-music-content-comment {
-  width: 1200px;
-  height: 800px;
+  width: 100%;
+  height: 100%;
   position: fixed;
-  border-radius: 20px;
-  border: 1px solid #000;
-  z-index: -1;
+}
+div#app-music div#app-music-box div.app-music-content-comment div.app-music-content-comment-box {
+  width: 200px;
+  max-height: 200px;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  padding: 30px 10px 20px 10px;
+  color: #835a5a;
+  border-radius: 10px;
+  transition: transform 0.4s, background-color 0.4s, color 0.4s, border-color 0.4s;
+}
+div#app-music div#app-music-box div.app-music-content-comment div.app-music-content-comment-box div.commentWrap {
+  width: 100%;
+  height: 100%;
+}
+div#app-music div#app-music-box div.app-music-content-comment div.app-music-content-comment-box div.commentWrap div.imageWrapper {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: -14px;
+  left: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+div#app-music div#app-music-box div.app-music-content-comment div.app-music-content-comment-box div.commentWrap div.imageWrapper img {
+  width: 100%;
+  height: 100%;
+}
+div#app-music div#app-music-box div.app-music-content-comment div.app-music-content-comment-box div.commentWrap span.nick-name {
+  width: 140px;
+  height: 40px;
+  position: absolute;
+  top: 4px;
+  left: 60px;
+  font-size: 14px;
+}
+div#app-music div#app-music-box div.app-music-content-comment div.app-music-content-comment-box div.commentWrap span.comment-content {
+  width: 180px;
+  max-height: 112px;
+  font-size: 12px;
+}
+div#app-music div#app-music-box div.app-music-content-comment-box:hover {
+  transform: scale(1.2);
+  color: #303030;
+  background-color: #ffffff;
+  z-index: 11;
 }

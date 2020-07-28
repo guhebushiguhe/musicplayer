@@ -1,2 +1,0 @@
-网易云api
-https://github.com/Binaryify/NeteaseCloudMusicApi

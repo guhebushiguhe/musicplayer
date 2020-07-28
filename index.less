@@ -5,11 +5,36 @@
 html,body{
     width: 100%;
     height: 100%;
+    user-select: none;
 }
 // 公共类
 .hidden{
     display: none;
 }
+
+// 动画
+
+@keyframes rotate {
+    0% {transform: rotate(0deg)}
+    50% {transform: rotate(180deg)}
+    100% {transform: rotate(360deg)}
+}
+
+@keyframes flotar {
+    0% {transform: translateY(0px)}
+    50% {transform: translateY(20px)}
+    100% {transform: translateY(0px)}
+}
+.flow {
+    animation: flotar 4s ease-in-out infinite;
+}
+.rotate {
+    animation: rotate 10s linear infinite;
+}
+
+
+
+
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/  
 ::-webkit-scrollbar  
 {  
@@ -43,17 +68,20 @@ div#app-music {
     div.app-video-box {
         div.app-mask {
             position: fixed;
-            border-radius: 20px;
-            width: 1200px;
-            height: 800px;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.623);
         }
         .app-video-close{
             position: absolute;
             width: 40px;
             height: 40px;
-            top: 0px;
-            left: 1250px;
+            top: 100px;
+            left: 1560px;
             font-size: 40px;
+            color: #fff;
+            z-index:10;
             cursor: pointer;
         }
         video {
@@ -72,8 +100,8 @@ div#app-music {
 
 
     div#app-music-box {
-        width: 1200px;
-        height: 800px;
+        width: 100%;
+        height: 100%;
         border-radius: 20px;
         position: relative;
         div.search-bar-input {
@@ -81,11 +109,12 @@ div#app-music {
             top: 50px;
             left: 50%;
             transform: translateX(-50%);
+            z-index: 1;
             input {
                 width: 300px;
                 height: 30px;
                 border-radius: 8px;
-                border: 1px solid rgb(68, 68, 68);
+                border: 1px solid rgb(218, 109, 109);
                 box-shadow: 0px 4px 20px rgba(1,1,1,.2);
                 outline: none;
                 text-indent: 1em;
@@ -105,11 +134,12 @@ div#app-music {
                   height: 40px;
                   position: absolute;
                   bottom: 4px;
-                  left: 50%;
+                  left: 50px;
                   border-radius: 50%;
                   background-size: 100% 100%;
-                  transform: translateX(-50%);
+                //   transform: translateX(-50%);
                   box-shadow: 2px 4px 10px rgba(1,1,1,.3);
+                  transform-origin: center center;
                   transition: height .2s;
               }
               .app-music-content-player-cover.length{
@@ -186,12 +216,69 @@ div#app-music {
           }
         
           div.app-music-content-comment {
-            width: 1200px;
-            height: 800px;
+            width: 100%;
+            height: 100%;
             position: fixed;
-            border-radius: 20px;
-            border: 1px solid #000;
-            z-index: -1;
+            div.app-music-content-comment-box {
+                width: 200px;
+                max-height: 200px;
+                position: absolute;
+                top: 50px;
+                left: 50px;
+                padding: 30px 10px 20px 10px;
+                color: rgb(131, 90, 90);
+                // background-color: rgba(255, 255, 255, .4);
+                // box-shadow: 2px 4px 10px rgba(1,1,1,0);
+                border-radius: 10px;
+                transition: transform .4s,background-color .4s,color .4s,border-color .4s;
+                div.commentWrap{
+                    width: 100%;
+                    height: 100%;
+                    div.imageWrapper {
+                        width: 40px;
+                        height: 40px;
+                        position: absolute;
+                        top: -14px;
+                        left: 10px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        img {
+                            width: 100%;
+                            height: 100%;
+                        }
+                      }
+                    span.nick-name {
+                        width: 140px;
+                        height: 40px;
+                        position: absolute;
+                        top: 4px;
+                        left: 60px;
+                        font-size: 14px;
+                    }
+                    span.comment-content {
+                        width: 180px;
+                        max-height: 112px;
+                        // position: relative;
+                        // animation: move 20s infinite linear;
+                        // position: absolute;
+                        // margin-top: 40px;
+                        // top: 40px;
+                        // left: 10px;
+                        font-size: 12px;
+                        // border: 1px solid #000;
+                        // background: rgba(255, 255, 255, 0.8);
+                        // box-shadow: 2px 4px 10px rgba(1,1,1,.3);
+                        // border-radius: 10px;
+                    }
+                }
+              }
+          }
+          div.app-music-content-comment-box:hover{
+              transform: scale(1.2);
+              color: rgb(48, 48, 48);
+              background-color: rgba(255, 255, 255, 1);
+            //   box-shadow: 2px 4px 10px rgba(1,1,1,.3);
+              z-index: 11;
           }
     }
 }
